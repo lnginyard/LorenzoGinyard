@@ -1,62 +1,457 @@
-const dialog = document.querySelector("#contentDialog");
-const dialogKicker = document.querySelector("#dialogKicker");
-const dialogTitle = document.querySelector("#dialogTitle");
-const dialogBody = document.querySelector("#dialogBody");
-const content = {
-  receipt: {
-    kicker: "CASE STUDY / FINANCIAL OPERATIONS",
-    title: "Receipt Tracking & Audit Readiness",
-    body: `<p><strong>The challenge.</strong> During an internal audit, receipt documentation was incomplete. The process needed a clearer way to show what had been submitted, what remained outstanding, and who needed to follow up.</p><h3>Workflow design</h3><ul><li>Created an Excel-based tracking process for receipt status.</li><li>Made outstanding documentation visible to the employee, requester, and financial manager.</li><li>Supported follow-up with purchasers and made the collection status easier to monitor.</li></ul><div class="dialog-callout">Reported outcome from the experience: all requested receipts were collected by the end of the audit. Add a sanitized sample workbook and screenshots before public launch.</div><h3>Skills demonstrated</h3><p>Process improvement · Audit support · Excel · Stakeholder communication · Internal controls</p>`
-  },
-  ai: {
-    kicker: "PROJECT CONCEPT / APPLIED AI",
-    title: "Anomaly & Disruption Intelligence",
-    body: `<p>This case-study space documents an AI competition concept focused on detecting anomalies or disruptions, suggesting mitigation actions, and forecasting disruption and resolution patterns.</p><h3>What to add before launch</h3><ul><li>Problem definition and target users.</li><li>Architecture or system diagram, dataset notes, and model approach.</li><li>Demo, repository, evaluation method, and known limitations.</li></ul><div class="dialog-callout">Keep claims tied to what was actually built, tested, or presented. Clearly distinguish the original concept from any future implementation.</div>`
-  },
-  cloud: {
-    kicker: "TECHNICAL LAB / CLOUD",
-    title: "Cloud & Infrastructure Lab",
-    body: `<p>A living collection of cloud architecture notes, hands-on experiments, deployment examples, and security decisions.</p><h3>Suggested case-study format</h3><ul><li>Architecture diagram and business purpose.</li><li>Services used, deployment method, and estimated cost controls.</li><li>Identity and access management, monitoring, and security trade-offs.</li><li>Repository or demo with setup instructions.</li></ul><div class="dialog-callout">Add specific AWS, Azure, or other cloud work only when you have concrete examples to demonstrate.</div>`
-  },
-  reconciliations: {
-    kicker: "THE CONVERGENCE BRIEF / ARTICLE PREVIEW",
-    title: "The Hidden Business Cost of Poor Reconciliations",
-    body: `<p>Reconciliations are often treated as a routine accounting task. In reality, they are one of the ways an organization tests whether its financial story matches the underlying activity.</p><p>When documentation is missing, approvals are unclear, or extracted transaction data does not match recorded information, the work extends beyond correcting a balance. Teams lose time investigating exceptions, closing periods becomes harder to predict, and leaders have less confidence in the reports they use to make decisions.</p><h3>A better operating model</h3><ul><li>Define who owns each reconciliation and when it is due.</li><li>Track exceptions with an owner, reason, supporting evidence, and resolution date.</li><li>Use consistent matching rules, while preserving human review for exceptions.</li><li>Review recurring issues as process signals—not just one-off errors.</li></ul><div class="dialog-callout">Thesis: strong controls do more than protect the past. They make the next decision more reliable.</div><p><em>Editorial draft preview. This article has not yet been published.</em></p>`
-  },
-  data: {
-    kicker: "THE CONVERGENCE BRIEF / ARTICLE PREVIEW",
-    title: "What Accountants Understand About Data That Software Engineers Need to Know",
-    body: `<p>A field in a database is not just a value. In a business system, it represents an event, a decision, an obligation, or evidence that someone may need to verify months later.</p><p>Accounting work makes the importance of traceability tangible: a transaction must connect to its support, its approval, its classification, and its place in a report. Software teams can apply the same discipline through data validation, audit trails, clear exception handling, and thoughtful system design.</p><h3>Design questions worth asking</h3><ul><li>Where did this data originate?</li><li>What makes it valid—and what happens when it is not?</li><li>Can someone trace the value back to evidence?</li><li>How will changes and exceptions be explained later?</li></ul><p><em>Editorial draft preview. This article has not yet been published.</em></p>`
-  },
-  build: {
-    kicker: "THE CONVERGENCE BRIEF / ARTICLE PREVIEW",
-    title: "From Financial Control to Software Design",
-    body: `<p>A process problem can be the beginning of a software idea. The first step is not always to write code; it is to understand the people, handoffs, evidence, and failure points in the current workflow.</p><p>A useful prototype makes the next action clearer. It shows what is missing, who owns the follow-up, what has been completed, and how a reviewer can understand the result. Only after that workflow is understood does it make sense to decide whether a spreadsheet, script, database-backed application, or larger system is appropriate.</p><h3>Build deliberately</h3><ul><li>Define the user and the pain point.</li><li>Map the current process and its exceptions.</li><li>Build the smallest useful prototype.</li><li>Test with realistic, sanitized data.</li><li>Measure whether the process became clearer or faster.</li></ul><p><em>Editorial draft preview. This article has not yet been published.</em></p>`
+
+(() => {
+  "use strict";
+
+  const $ = (selector, root = document) =>
+    root.querySelector(selector);
+
+  const $$ = (selector, root = document) =>
+    [...root.querySelectorAll(selector)];
+
+  // Update the copyright year
+  const year = $("#year");
+  if (year) {
+    year.textContent = new Date().getFullYear();
   }
-};
-function openContent(key) {
-  const item = content[key];
-  if (!item) return;
-  dialogKicker.textContent = item.kicker;
-  dialogTitle.textContent = item.title;
-  dialogBody.innerHTML = item.body;
-  dialog.showModal();
-}
-document.querySelectorAll("[data-project]").forEach(button => button.addEventListener("click", () => openContent(button.dataset.project)));
-document.querySelectorAll("[data-article]").forEach(button => button.addEventListener("click", () => openContent(button.dataset.article)));
-document.querySelector(".dialog-close").addEventListener("click", () => dialog.close());
-dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
-const menuButton = document.querySelector(".menu-toggle");
-const nav = document.querySelector(".nav");
-menuButton.addEventListener("click", () => {
-  const open = nav.classList.toggle("open");
-  menuButton.setAttribute("aria-expanded", String(open));
-  menuButton.querySelector("span").textContent = open ? "−" : "＋";
-});
-nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
-  nav.classList.remove("open"); menuButton.setAttribute("aria-expanded", "false"); menuButton.querySelector("span").textContent = "＋";
-}));
-document.querySelector("#year").textContent = new Date().getFullYear();
-document.querySelector("#emailButton").addEventListener("click", () => {
-  alert("Before launch, replace this placeholder with your preferred professional email address in index.html.");
-});
+
+  // Mobile navigation
+  const menuButton = $(".menu-toggle");
+  const nav = $("#primary-nav");
+
+  if (menuButton && nav) {
+    menuButton.addEventListener("click", () => {
+      const isOpen = nav.classList.toggle("open");
+
+      menuButton.setAttribute("aria-expanded", String(isOpen));
+
+      const menuLabel = $("span", menuButton);
+      if (menuLabel) {
+        menuLabel.textContent = isOpen ? "−" : "＋";
+      }
+    });
+
+    $$("a", nav).forEach((link) => {
+      link.addEventListener("click", () => {
+        nav.classList.remove("open");
+        menuButton.setAttribute("aria-expanded", "false");
+
+        const menuLabel = $("span", menuButton);
+        if (menuLabel) {
+          menuLabel.textContent = "＋";
+        }
+      });
+    });
+  }
+
+  // Portfolio project filters
+  const filterButtons = $$(".filter");
+  const projectCards = $$(".project-card");
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const selectedFilter = button.dataset.filter || "all";
+
+      filterButtons.forEach((item) => {
+        const active = item === button;
+        item.classList.toggle("active", active);
+        item.setAttribute("aria-pressed", String(active));
+      });
+
+      projectCards.forEach((card) => {
+        const category = card.dataset.category || "";
+        const matches =
+          selectedFilter === "all" ||
+          category.split(/\s+/).includes(selectedFilter);
+
+        card.hidden = !matches;
+      });
+    });
+  });
+
+  // Interactive reconciliation workbench demo
+  const transactions = [
+    {
+      id: "TXN-1001",
+      date: "2026-09-02",
+      description: "Office supplies",
+      amount: 248.75,
+      status: "matched",
+      note: "Amount and reference match."
+    },
+    {
+      id: "TXN-1002",
+      date: "2026-09-03",
+      description: "Software subscription",
+      amount: 129.00,
+      status: "matched",
+      note: "Vendor and amount match."
+    },
+    {
+      id: "TXN-1003",
+      date: "2026-09-05",
+      description: "Travel reimbursement",
+      amount: 485.20,
+      status: "review",
+      note: "Supporting documentation needs review."
+    },
+    {
+      id: "TXN-1004",
+      date: "2026-09-08",
+      description: "Equipment purchase",
+      amount: 1240.00,
+      status: "exception",
+      note: "Potential budget or approval exception."
+    },
+    {
+      id: "TXN-1005",
+      date: "2026-09-11",
+      description: "Training expense",
+      amount: 350.00,
+      status: "matched",
+      note: "Amount and reference match."
+    },
+    {
+      id: "TXN-1006",
+      date: "2026-09-14",
+      description: "Vendor payment",
+      amount: 720.50,
+      status: "review",
+      note: "Vendor reference requires confirmation."
+    }
+  ];
+
+  const transactionRows = $("#transaction-rows");
+  const demoFilter = $("#demo-filter");
+  const demoCount = $("#demo-count");
+  const reviewedCount = $("#reviewed-count");
+  const matchSummary = $("#match-summary");
+  const demoExplanation = $("#demo-explanation");
+  const resetDemo = $("#reset-demo");
+
+  const money = (amount) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD"
+    }).format(amount);
+
+  const statusLabel = (status) => {
+    const labels = {
+      matched: "Matched",
+      review: "Needs review",
+      exception: "Exception"
+    };
+
+    return labels[status] || status;
+  };
+
+  function renderTransactions() {
+    if (!transactionRows) return;
+
+    const selectedStatus = demoFilter?.value || "all";
+
+    const visibleTransactions = transactions.filter((transaction) => {
+      return (
+        selectedStatus === "all" ||
+        transaction.status === selectedStatus
+      );
+    });
+
+    transactionRows.replaceChildren();
+
+    visibleTransactions.forEach((transaction) => {
+      const row = document.createElement("tr");
+
+      const values = [
+        transaction.id,
+        transaction.date,
+        transaction.description,
+        money(transaction.amount),
+        statusLabel(transaction.status)
+      ];
+
+      values.forEach((value, index) => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+
+        if (index === 4) {
+          cell.dataset.status = transaction.status;
+        }
+
+        row.appendChild(cell);
+      });
+
+      transactionRows.appendChild(row);
+    });
+
+    if (demoCount) {
+      demoCount.textContent =
+        `${visibleTransactions.length} transaction` +
+        (visibleTransactions.length === 1 ? "" : "s");
+    }
+
+    const matched = transactions.filter(
+      (transaction) => transaction.status === "matched"
+    ).length;
+
+    const needsReview = transactions.filter(
+      (transaction) => transaction.status === "review"
+    ).length;
+
+    const exceptions = transactions.filter(
+      (transaction) => transaction.status === "exception"
+    ).length;
+
+    if (reviewedCount) {
+      reviewedCount.textContent = String(transactions.length);
+    }
+
+    if (matchSummary) {
+      matchSummary.textContent =
+        `${matched} matched · ${needsReview} for review · ` +
+        `${exceptions} exception${exceptions === 1 ? "" : "s"}`;
+    }
+
+    if (demoExplanation) {
+      if (selectedStatus === "all") {
+        demoExplanation.textContent =
+          "Review matched transactions, documentation gaps, and " +
+          "potential exceptions. This demonstration uses fictional data.";
+      } else {
+        const descriptions = {
+          matched: "Transactions whose available references appear to match.",
+          review: "Transactions that need additional documentation or verification.",
+          exception: "Potential control, budget, or approval exceptions requiring review."
+        };
+
+        demoExplanation.textContent =
+          descriptions[selectedStatus] ||
+          "Review the selected transactions.";
+      }
+    }
+  }
+
+  if (demoFilter) {
+    demoFilter.addEventListener("change", renderTransactions);
+  }
+
+  if (resetDemo) {
+    resetDemo.addEventListener("click", () => {
+      if (demoFilter) {
+        demoFilter.value = "all";
+      }
+
+      renderTransactions();
+    });
+  }
+
+  renderTransactions();
+
+  // Project details and article preview dialog
+  const dialog = $("#content-dialog");
+  const dialogKicker = $("#dialog-kicker");
+  const dialogTitle = $("#dialog-title");
+  const dialogBody = $("#dialog-body");
+
+  const content = {
+    reconciliation: {
+      kicker: "CASE STUDY",
+      title: "Smart Reconciliation Workbench",
+      body: `
+        <p>
+          A prototype exploring how financial teams can identify
+          matching transactions, missing documentation, and potential
+          control exceptions.
+        </p>
+        <h3>Problem</h3>
+        <p>
+          Manual reconciliation can consume time when transaction
+          details do not match, approvals are missing, or supporting
+          documentation is incomplete.
+        </p>
+        <h3>Approach</h3>
+        <p>
+          Organize transactions by status, highlight exceptions, and
+          give reviewers a clearer path to investigate discrepancies.
+        </p>
+        <h3>Controls matter</h3>
+        <p>
+          Automation should flag exceptions for human review rather
+          than silently approving out-of-budget or unauthorized
+          transactions.
+        </p>
+        <p><strong>Note:</strong> This is a demonstration using fictional data,
+        not a production accounting system.</p>
+      `
+    },
+
+    automation: {
+      kicker: "PROJECT OVERVIEW",
+      title: "Financial Process Automation",
+      body: `
+        <p>
+          A concept for reducing repetitive finance work while
+          preserving review controls and an audit trail.
+        </p>
+        <h3>Potential workflows</h3>
+        <ul>
+          <li>Missing receipt and approval tracking</li>
+          <li>Transaction matching and reconciliation support</li>
+          <li>Month-end close task monitoring</li>
+          <li>Exception reporting and follow-up</li>
+        </ul>
+        <p>
+          The objective is not simply to automate tasks. It is to make
+          financial processes more accurate, transparent, and easier
+          to audit.
+        </p>
+      `
+    },
+
+    cloud: {
+      kicker: "PROJECT OVERVIEW",
+      title: "Cloud and Data Engineering",
+      body: `
+        <p>
+          Exploring cloud architecture, data workflows, and practical
+          ways to build reliable software for business operations.
+        </p>
+        <h3>Areas of focus</h3>
+        <ul>
+          <li>Cloud fundamentals and architecture</li>
+          <li>Data quality and validation</li>
+          <li>API design and integration</li>
+          <li>Security, monitoring, and reliability</li>
+        </ul>
+        <p>
+          Future iterations can connect a tested interface to a
+          database and secure backend service.
+        </p>
+      `
+    },
+
+    ai: {
+      kicker: "PROJECT OVERVIEW",
+      title: "Applied AI for Business Operations",
+      body: `
+        <p>
+          Investigating how AI and anomaly detection can help identify
+          unusual patterns, explain potential disruptions, and support
+          more informed operational decisions.
+        </p>
+        <h3>Design principles</h3>
+        <ul>
+          <li>Explainable findings rather than unexplained alerts</li>
+          <li>Human review for consequential decisions</li>
+          <li>Clear measurement of accuracy and limitations</li>
+          <li>Privacy-aware data handling</li>
+        </ul>
+      `
+    },
+
+    article1: {
+      kicker: "THE CONVERGENCE BRIEF",
+      title: "Why Reconciliation Is a Systems Problem",
+      body: `
+        <p>
+          Reconciliation is often treated as a spreadsheet task.
+          In reality, it is a systems problem involving data quality,
+          business rules, approvals, timing, and accountability.
+        </p>
+        <p>
+          A useful automation workflow should distinguish a clean
+          match from a transaction that merely looks similar. It
+          should also surface missing documentation and route
+          exceptions to the appropriate reviewer.
+        </p>
+        <p>
+          The strongest financial automation does more than save
+          clicks: it strengthens controls and makes the process easier
+          to understand and audit.
+        </p>
+      `
+    },
+
+    article2: {
+      kicker: "THE CONVERGENCE BRIEF",
+      title: "Automation Without Losing Control",
+      body: `
+        <p>
+          Good automation should make policy easier to follow, not
+          easier to bypass.
+        </p>
+        <p>
+          When a transaction falls outside an approved budget or
+          lacks required authorization, the system should flag the
+          issue, preserve the evidence, and direct it to a responsible
+          reviewer.
+        </p>
+        <p>
+          The goal is a faster process with stronger accountability,
+          not an automatic approval for every transaction.
+        </p>
+      `
+    },
+
+    article3: {
+      kicker: "THE CONVERGENCE BRIEF",
+      title: "The Finance Professional as a Systems Thinker",
+      body: `
+        <p>
+          Finance professionals see how policies, people, systems,
+          and financial data interact. Software development offers
+          a way to turn those observations into repeatable workflows.
+        </p>
+        <p>
+          Combining accounting knowledge with technical skills can
+          help teams reduce repetitive work, improve data quality,
+          and make decisions with better information.
+        </p>
+      `
+    }
+  };
+
+  function openContent(key) {
+    if (!dialog || !dialogTitle || !dialogBody) return;
+
+    const item = content[key];
+
+    if (!item) return;
+
+    if (dialogKicker) {
+      dialogKicker.textContent = item.kicker;
+    }
+
+    dialogTitle.textContent = item.title;
+    dialogBody.innerHTML = item.body;
+
+    if (typeof dialog.showModal === "function") {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute("open", "");
+    }
+  }
+
+  $$("[data-open]").forEach((button) => {
+    button.addEventListener("click", () => {
+      openContent(button.dataset.open);
+    });
+  });
+
+  $$(".dialog-close").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (dialog?.open) {
+        dialog.close();
+      } else {
+        dialog?.removeAttribute("open");
+      }
+    });
+  });
+
+  if (dialog) {
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) {
+        dialog.close();
+      }
+    });
+  }
+})();
