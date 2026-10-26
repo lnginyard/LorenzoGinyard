@@ -21,10 +21,10 @@ The earlier `src/` files are retained as a working/history copy; the root files 
 ## Featured work
 
 - **Artificial Intelligence Cascade Prevention Engine (AICPE):** an early MVP foundation exploring telemetry normalization, rule-based cascade signatures, and event-driven AWS components. The companion dashboard is a simulation using local demo data; it should not be described as connected to live AWS telemetry unless that integration is implemented and verified.
-- **Smart Reconciliation Workbench:** a portfolio concept demonstrating why transaction matching, missing documentation, and approval exceptions should remain traceable. The embedded demo uses fictional data and is not a live accounting system.
-- **Receipt Tracking & Audit Readiness:** a real-world Excel workflow created during internal-audit support; all requested receipts were collected by the end of the audit.
-- **MyCommerce:** a Django/Vue e-commerce codebase, subject to fresh-install and workflow verification.
-- **InventoryGuard:** an educational Android inventory application project.
+- **Ginyard ReconIQ — Financial Reconciliation Intelligence:** a portfolio concept demonstrating why transaction matching, missing documentation, and approval exceptions should remain traceable. The embedded demo uses fictional data and is not a live accounting system.
+- **Ginyard AuditTrail — Receipt Control & Audit Readiness:** a real-world Excel workflow created during internal-audit support; all requested receipts were collected by the end of the audit.
+- **Ginyard Commerce Platform (repository: `mycommerce`):** a Django/Vue e-commerce codebase, subject to fresh-install and workflow verification.
+- **Ginyard Inventory Operations (repository: `Inventory-App`):** an educational Android inventory application project.
 - **Artemis Financial assessment:** a coursework-based secure-software assessment report, not a professional penetration test.
 
 ## Run locally
