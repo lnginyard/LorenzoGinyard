@@ -171,7 +171,14 @@
 
       values.forEach((value, index) => {
         const cell = document.createElement("td");
-        cell.textContent = value;
+        if (index === 4) {
+          const badge = document.createElement("span");
+          badge.className = `status${transaction.status === "matched" ? "" : " review"}`;
+          badge.textContent = value;
+          cell.appendChild(badge);
+        } else {
+          cell.textContent = value;
+        }
 
         if (index === 4) {
           cell.dataset.status = transaction.status;
@@ -289,7 +296,7 @@
       title: "Financial Process Automation",
       body: `
         <p>
-          A concept for reducing repetitive finance work while
+          A prototype for reducing repetitive finance work while
           preserving review controls and an audit trail.
         </p>
         <h3>Potential workflows</h3>
@@ -303,6 +310,54 @@
           The objective is not simply to automate tasks. It is to make
           financial processes more accurate, transparent, and easier
           to audit.
+        </p>
+      `
+    },
+
+    "ap-backlog": {
+      kicker: "CASE STUDY / PROCESS IMPROVEMENT",
+      title: "AP Backlog Triage Tracker",
+      body: `
+        <p>
+          A real-world accounts payable workflow created for a
+          regional distribution company with hundreds of invoices
+          waiting to be converted into bills, reviewed, approved,
+          and moved through the AP process.
+        </p>
+        <h3>The problem</h3>
+        <p>
+          The backlog was difficult to prioritize because invoice
+          urgency, purchase-order status, exceptions, duplicate risk,
+          ownership, and next actions were spread across disconnected
+          lists. The team needed a practical way to see what required
+          attention first and where each invoice was in the process.
+        </p>
+        <h3>What the system does</h3>
+        <ul>
+          <li>Logs one row per invoice with vendor, amount, PO, due date, discount, owner, and status</li>
+          <li>Calculates days to due, invoice age, duplicate risk, blockers, and urgency</li>
+          <li>Routes work into prioritized buckets: urgent, clean PO, non-PO, exception, and duplicate</li>
+          <li>Tracks exception owners, follow-up dates, resolutions, and daily throughput</li>
+          <li>Shows required pace versus actual pace for clearing the backlog</li>
+        </ul>
+        <h3>Why it matters</h3>
+        <p>
+          Instead of treating the spreadsheet as a passive list, the
+          tracker acts as a lightweight operating system for AP:
+          analysts can filter the queue, batch clean work by vendor,
+          chase blockers, and understand whether the team is on track
+          to meet its clear-date target.
+        </p>
+        <div class="dialog-callout">
+          This workflow generated real-time operational results by
+          turning a real-world finance problem into a visible,
+          measurable process. Company and vendor names in the sample
+          workbook have been generalized for privacy.
+        </div>
+        <p>
+          <a href="./Regional_Distribution_AP_Backlog_Triage_Tracker.xlsx" download>
+            Download the privacy-safe tracker workbook ↗
+          </a>
         </p>
       `
     },
@@ -431,6 +486,117 @@
     }
   }
 
+  function openArticle(article) {
+    if (!dialog || !dialogTitle || !dialogBody) return;
+
+    if (dialogKicker) {
+      dialogKicker.textContent = article.category;
+    }
+
+    dialogTitle.textContent = article.title;
+    dialogBody.replaceChildren();
+
+    article.body.forEach((paragraph) => {
+      const element = document.createElement("p");
+      element.textContent = paragraph;
+      dialogBody.appendChild(element);
+    });
+
+    if (typeof dialog.showModal === "function") {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute("open", "");
+    }
+  }
+
+  async function loadBriefArchive() {
+    const briefArticles = $("#brief-articles");
+    const briefStatus = $("#brief-status");
+
+    if (!briefArticles) return;
+
+    try {
+      const response = await fetch("./data/brief.json");
+      if (!response.ok) {
+        throw new Error(`Brief archive request failed: ${response.status}`);
+      }
+
+      const archive = await response.json();
+      const articles = archive.articles || [];
+      briefArticles.replaceChildren();
+
+      articles.forEach((article, index) => {
+        const row = document.createElement("article");
+        row.className = "article-row";
+
+        const number = document.createElement("span");
+        number.className = "article-number";
+        number.textContent = String(index + 1).padStart(2, "0");
+
+        const contentColumn = document.createElement("div");
+        const category = document.createElement("p");
+        category.className = "article-category";
+        category.textContent = article.category;
+
+        const title = document.createElement("h3");
+        title.textContent = article.title;
+
+        const excerpt = document.createElement("p");
+        excerpt.textContent = article.excerpt;
+
+        const button = document.createElement("button");
+        button.className = "read-article";
+        button.type = "button";
+        button.dataset.articleSlug = article.slug;
+        button.textContent = article.status === "published"
+          ? "Read article "
+          : "Preview queued article ";
+
+        const arrow = document.createElement("span");
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.textContent = "↗";
+        button.appendChild(arrow);
+
+        contentColumn.append(category, title, excerpt, button);
+
+        const label = document.createElement("span");
+        label.className = "article-side";
+        label.textContent = article.label;
+
+        row.append(number, contentColumn, label);
+        briefArticles.appendChild(row);
+      });
+
+      briefArticles.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-article-slug]");
+        if (!button) return;
+
+        const article = articles.find(
+          (item) => item.slug === button.dataset.articleSlug
+        );
+        if (article) openArticle(article);
+      });
+
+      if (briefStatus) {
+        const publishedCount = articles.filter(
+          (article) => article.status === "published"
+        ).length;
+        const queuedCount = articles.filter(
+          (article) => article.status === "queued"
+        ).length;
+        briefStatus.textContent =
+          `${publishedCount} PUBLISHED · ${queuedCount} QUEUED · WEEKLY PUBLICATION PIPELINE`;
+      }
+    } catch (error) {
+      console.error("Unable to load The Convergence Brief archive.", error);
+      if (briefStatus) {
+        briefStatus.textContent = "ARCHIVE UNAVAILABLE · CHECK BACK SOON";
+      }
+    }
+  }
+
+  loadBriefArchive();
+
   $$("[data-open]").forEach((button) => {
     button.addEventListener("click", () => {
       openContent(button.dataset.open);
@@ -452,6 +618,40 @@
       if (event.target === dialog) {
         dialog.close();
       }
+    });
+  }
+
+  // Prepare an accessible email inquiry without requiring a backend.
+  const contactForm = $("#contact-form");
+  const formStatus = $("#form-status");
+
+  if (contactForm) {
+    contactForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(contactForm);
+      const name = String(formData.get("name") || "").trim();
+      const email = String(formData.get("email") || "").trim();
+      const message = String(formData.get("message") || "").trim();
+
+      if (!name || !email || !message) {
+        if (formStatus) {
+          formStatus.textContent = "Please complete each field before continuing.";
+        }
+        return;
+      }
+
+      const subject = encodeURIComponent(`Portfolio inquiry from ${name}`);
+      const body = encodeURIComponent(
+        `Name: ${name}\nEmail: ${email}\n\n${message}`
+      );
+
+      if (formStatus) {
+        formStatus.textContent = "Your email draft is ready to review in your mail app.";
+      }
+
+      window.location.href =
+        `mailto:hello@lorenzoginyard.com?subject=${subject}&body=${body}`;
     });
   }
 })();

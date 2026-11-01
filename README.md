@@ -1,17 +1,34 @@
 # Lorenzo Ginyard — Portfolio + The Convergence Brief
 
-A responsive, static first version of a personal portfolio and publishing hub built with HTML, CSS, and vanilla JavaScript.
+A responsive, static portfolio and publishing hub built with semantic HTML, CSS, and vanilla JavaScript. The site presents Lorenzo's finance and technology work as a polished product surface while making the underlying systems thinking visible.
 
 ## What's included
 - Dark, luxury-tech visual direction
 - Responsive navigation and mobile menu
 - Hero, selected projects, about, operating principles, contact, and publication sections
 - Interactive case-study/article preview dialogs
-- Responsive styling and reduced-motion support
+- Fictional-data reconciliation workbench with status filtering
+- The Convergence Brief archive sourced from Markdown files
+- GitHub Actions workflow that publishes one queued article every Monday
+- Inquiry form that prepares an email draft without a backend
+- Skip link, visible focus states, labelled controls, and reduced-motion support
+- Responsive styling
 - No build step required
 
 ## Preview locally
-Open `index.html` in a browser.
+Run `python3 -m http.server 8000 --directory src`, then open `http://127.0.0.1:8000/`. The Brief archive is loaded from `src/data/brief.json`, so it should be previewed over HTTP rather than opened directly from the filesystem.
+
+## Publishing The Convergence Brief
+Articles live in `content/brief/queue/` and use Markdown frontmatter for their title, category, label, date, status, and excerpt. The weekly workflow in `.github/workflows/publish-brief.yml` moves the oldest queued article into `content/brief/published/`, rebuilds `src/data/brief.json`, and commits the update back to the repository. GitHub Pages then serves the updated archive.
+
+To publish manually, run:
+
+```bash
+node scripts/publish-brief.mjs
+node scripts/build-brief.mjs
+```
+
+Add a new `.md` file to the queue when you want to prepare a future article. The workflow can also be started manually from the repository's **Actions** tab with **Run workflow**.
 
 ## Before publishing
 1. Confirm education status and graduation wording.

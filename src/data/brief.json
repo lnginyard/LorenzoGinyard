@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-11-01T23:14:43.941Z",
+  "articles": [
+    {
+      "slug": "finance-professional-as-systems-thinker",
+      "title": "The Finance Professional as a Systems Thinker",
+      "category": "BUILD IN PUBLIC / PUBLISHED",
+      "label": "BUILD",
+      "date": "2026-11-01",
+      "status": "published",
+      "excerpt": "Finance professionals see how policies, people, systems, and financial data interact.",
+      "body": [
+        "Finance professionals see how policies, people, systems, and financial data interact. Software development offers a way to turn those observations into repeatable workflows.",
+        "Combining accounting knowledge with technical skills can help teams reduce repetitive work, improve data quality, and make decisions with better information."
+      ],
+      "source": "content/brief/published/finance-professional-as-systems-thinker.md"
+    },
+    {
+      "slug": "why-reconciliation-is-a-systems-problem",
+      "title": "Why Reconciliation Is a Systems Problem",
+      "category": "FINANCIAL INTELLIGENCE / PUBLISHED",
+      "label": "CONTROL",
+      "date": "2026-10-26",
+      "status": "published",
+      "excerpt": "Reconciliation is not only a spreadsheet task. It is a systems problem involving data quality, business rules, approvals, timing, and accountability.",
+      "body": [
+        "Reconciliation is often treated as a spreadsheet task. In reality, it is a systems problem involving data quality, business rules, approvals, timing, and accountability.",
+        "A useful automation workflow should distinguish a clean match from a transaction that merely looks similar. It should also surface missing documentation and route exceptions to the appropriate reviewer.",
+        "The strongest financial automation does more than save clicks: it strengthens controls and makes the process easier to understand and audit."
+      ],
+      "source": "content/brief/published/why-reconciliation-is-a-systems-problem.md"
+    },
+    {
+      "slug": "turning-an-ap-backlog-into-a-workflow",
+      "title": "Turning an AP Backlog Into a Workflow",
+      "category": "FINANCIAL OPERATIONS / QUEUED",
+      "label": "AP SYSTEMS",
+      "date": "2026-11-08",
+      "status": "queued",
+      "excerpt": "A backlog of hundreds of invoices is not just a volume problem. It is a visibility, prioritization, and ownership problem.",
+      "body": [
+        "A backlog of hundreds of invoices is not just a volume problem. It is a visibility, prioritization, and ownership problem.",
+        "In a regional distribution environment, invoices were waiting to be converted into bills and moved through accounts payable. The work was real, but the queue did not make the next decision obvious. Some invoices were urgent because they were past due or approaching a discount deadline. Others needed a purchase order match, budget-owner approval, receipt confirmation, or a duplicate check before they could move forward.",
+        "The first step was to turn the backlog into a structured triage log. Each invoice received a consistent record for its vendor, amount, purchase order, due date, discount date, owner, status, and next action. That foundation made it possible to analyze the backlog instead of scanning it.",
+        "The tracker then applied practical routing rules. Urgent work moved to the front. Clean purchase-order invoices could be batched by vendor. Non-PO invoices were separated for coding and approval. Price or quantity variances, missing receipts, unknown vendors, and suspected duplicates were routed into exception handling rather than being buried in the general queue.",
+        "The most useful part of the system was not the visual dashboard. It was the operating rhythm around it. Users could filter the queue by final bucket, update an invoice from Not Started through In Review, Awaiting Approval, Approved, and Billed, assign exception owners, and record when follow-up was due. A daily log compared actual throughput with the pace required to meet the target clear date.",
+        "That changed the question from “How many invoices are left?” to “What is blocking this invoice, who owns the next action, and are we moving fast enough?” The spreadsheet became a lightweight process-improvement system: a shared view of work, risk, accountability, and progress.",
+        "The solution was intentionally practical. It did not require a new enterprise platform to create value. It translated AP policy and operational judgment into a repeatable workflow that could produce real-time results from the data already available to the team.",
+        "The lesson extends beyond accounts payable. When a process feels overwhelmed, the answer is often not more urgency. It is better visibility, explicit decision rules, clear ownership, and a feedback loop that shows whether the process is improving.",
+        "Company and vendor names in the accompanying workbook have been generalized for privacy. The underlying problem and workflow design represent real-world process-improvement work."
+      ],
+      "source": "content/brief/queue/turning-an-ap-backlog-into-a-workflow.md"
+    },
+    {
+      "slug": "automation-without-losing-control",
+      "title": "Automation Without Losing Control",
+      "category": "FINTECH / QUEUED",
+      "label": "TRUST",
+      "date": "2026-11-15",
+      "status": "queued",
+      "excerpt": "Good automation should make policy easier to follow, not easier to bypass.",
+      "body": [
+        "Good automation should make policy easier to follow, not easier to bypass.",
+        "When a transaction falls outside an approved budget or lacks required authorization, the system should flag the issue, preserve the evidence, and direct it to a responsible reviewer.",
+        "The goal is a faster process with stronger accountability, not an automatic approval for every transaction."
+      ],
+      "source": "content/brief/queue/automation-without-losing-control.md"
+    }
+  ]
+}

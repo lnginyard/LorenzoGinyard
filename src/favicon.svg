@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>LG monogram</title>
+  <rect width="64" height="64" rx="8" fill="#090c12"/>
+  <rect x="7" y="7" width="50" height="50" fill="#101620" stroke="#60708a" stroke-width="2"/>
+  <path d="M19 18v28h17" fill="none" stroke="#f2f5fb" stroke-width="5" stroke-linecap="square"/>
+  <path d="M45 18a14 14 0 1 0 0 28" fill="none" stroke="#56c8ff" stroke-width="5" stroke-linecap="square"/>
+  <path d="M37 32h10v12" fill="none" stroke="#f2f5fb" stroke-width="5" stroke-linecap="square"/>
+</svg>

@@ -1,0 +1,35 @@
+name: Publish The Convergence Brief
+
+on:
+  schedule:
+    - cron: "0 14 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out publication source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Publish next queued article
+        run: node scripts/publish-brief.mjs
+
+      - name: Build article archive
+        run: node scripts/build-brief.mjs
+
+      - name: Commit publication update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/brief src/data/brief.json
+          git diff --cached --quiet || git commit -m "Publish weekly Convergence Brief article"
+          git push
